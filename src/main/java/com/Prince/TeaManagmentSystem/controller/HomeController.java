@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +35,9 @@ public class HomeController {
 	private final VendorService vendorService;
 
 	private final TeaService teaService;
+
+	@Value("${root.url}")
+	public String url;
 
 	@GetMapping("/downloadPdf")
 	public ResponseEntity<String> downloadPDFOfListTeas(@RequestParam String vendorName)
@@ -64,8 +68,11 @@ public class HomeController {
 	public String masterHomePageableView(Model model, @RequestParam(defaultValue = "1") int page,
 			@ModelAttribute PagedRequest pagedRequest) {
 
+		System.err.println("url ::" + url);
+
 		Page<TeaResponse> listVendors = teaService.getAllTeasPage(PageRequest.of(page, 5), pagedRequest);
 
+		model.addAttribute("url", url);
 		model.addAttribute("products", listVendors);
 		model.addAttribute("currentPage", page);
 

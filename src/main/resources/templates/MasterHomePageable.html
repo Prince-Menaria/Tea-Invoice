@@ -98,6 +98,8 @@
 		<p> totalPages: </p>
 		<p th:text="${products.totalPages}"></p>
 	</div>-->
+	
+	<p th:text="${url}"></p>
 
 	<div class="container-left">
 		<form class="reset-form" th:action="@{/}" method="post">
@@ -141,8 +143,8 @@
 			<h1>Tea Inventory Management</h1>
 			<br>
 			<br>
-			<button type="button"><a href="http://localhost:8080/savevendor">Add Vendor</a></button>
-			<button type="button"><a href="http://localhost:8080/savetea">Add Tea</a></button>
+			<button type="button"><a href="https://teainvoicer.onrender.com/savevendor">Add Vendor</a></button>
+			<button type="button"><a href="https://teainvoicer.onrender.com/savetea">Add Tea</a></button>
 
 		</center>
 
