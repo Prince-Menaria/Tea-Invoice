@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tea Inventory Form</title>
+
+	<!-- Include Bootstrap CSS -->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+	<style type="text/css">
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+			margin: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+
+		.container {
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			max-width: 600px;
+			/* Set maximum width */
+			width: 100%;
+			/* Make it responsive */
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		h1 {
+			font-size: 24px;
+			margin-bottom: 20px;
+			text-align: center;
+		}
+
+		.toast-above-form {
+			position: absolute;
+			top: 20%;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 1000;
+		}
+	</style>
+
+
+</head>
+
+<body>
+	<div class="container">
+		<h1>Tea Form</h1>
+		<form action="/savetea" method="post">
+			<div class="form-group">
+				<label for="vendor-name">Vendor Name:</label>
+				<select id="vendor-name" name="vendorName" class="form-control">
+					<option th:each="vendor : ${listVendors}" th:value="${vendor.vId}" th:text="${vendor.vName}" />
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="create-date">Date:</label>
+				<input type="date" id="create-date" name="createDate" class="form-control" onfocus="setMinDate()"
+					required>
+			</div>
+			<div class="form-group">
+				<label for="time">Time:</label>
+				<select id="time" name="time" class="form-control">
+					<option value="MORNING">Morning</option>
+					<option value="AFTERNOON">Afternoon</option>
+					<option value="EVENING">Evening</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="quantity">Quantity:</label>
+				<input type="number" id="quantity" name="quantity" class="form-control" required>
+			</div>
+			<div class="form-group">
+				<label for="price">Price:</label>
+				<input type="number" id="price" name="price" value="10" readonly class="form-control">
+			</div>
+			<center>
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</center>
+			<br>
+			<center> <button type="reset" class="btn btn-secondary" onclick="window.location.href='/'">Back</button>
+			</center>
+		</form>
+	</div>
+
+	<!-- Include Bootstrap JS (Optional) -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<script>
+
+		function showSuccessMessage() {
+			const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+			successToast.show();
+		}
+
+		function showErrorMessage() {
+			const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
+			errorToast.show();
+		}
+
+		const form = document.querySelector('form');
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			const formData = new FormData(form);
+			const response = await fetch('/savetea', {
+				method: 'POST',
+				body: formData
+			});
+
+			if (response.ok) {
+				// Data saved successfully, you can redirect to a retrieval page
+				showSuccessMessage();
+				form.reset();
+
+			}
+			console.log(response.status);
+
+
+		});
+
+
+
+		function setMinDate() {
+			var today = new Date().toISOString().split('T')[0];
+			document.getElementById("create-date").setAttribute("max", today);
+		}
+	</script>
+
+	<div id="errorToast" class="toast toast-above-form" role="alert" aria-live="assertive" aria-atomic="true"
+		data-delay="5000">
+		<div class="toast-body">
+			Duplicate Vendor Mobile Number Not Allowed !!!!!
+		</div>
+	</div>
+
+	<div id="successToast" class="toast toast-above-form" role="alert" aria-live="assertive" aria-atomic="true"
+		data-delay="5000">
+		<div class="toast-body">
+			Data Saved Successfully !!!
+		</div>
+	</div>
+</body>
+
+</html>

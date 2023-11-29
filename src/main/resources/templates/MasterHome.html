@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vendor Form</title>
+
+	<!-- Add Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+	<style type="text/css">
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+			margin: 0;
+			display: flex;
+			justify-content: space-between;
+			/* Align items to left and right */
+			align-items: center;
+			height: 100vh;
+		}
+
+		.container-left {
+			flex: 20%;
+			/* Take 50% of the space */
+			padding: 20px;
+		}
+
+		.container-right {
+			/* Take 50% of the space */
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-left: 20px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+			border: 1px solid #ccc;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #f2f2f2;
+			border-bottom: 2px solid #ccc;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		tr:hover {
+			background-color: #e3e3e3;
+		}
+
+		.form-control {
+			width: 40%;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<!--	<p th:text="${listVendors}"></p>-->
+
+	<div class="container-left">
+		<form class="reset-form" th:action="@{/}" method="post">
+			<div class="form-group">
+				<label for="start-date">Start Date (YYYY/MM/DD):</label>
+				<input type="date" class="form-control" id="start-date" name="startDate" pattern="\d{4}/\d{2}/\d{2}" />
+			</div>
+			<div class="form-group">
+				<label for="end-date">End Date (YYYY/MM/DD):</label>
+				<input type="date" class="form-control" id="end-date" name="endDate" pattern="\d{4}/\d{2}/\d{2}" />
+			</div>
+
+			<div class="form-group">
+				<label for="vendor-name">Vendor Name:</label>
+				<select class="form-control" id="vendor-name" name="vendorName">
+					<option th:text="${Select}" />
+					<option th:each="vendors : ${listVendorNames}" th:value="${vendors.vId}"
+						th:text="${vendors.vName}" />
+				</select>
+			</div>
+			<button type="submit" class="btn btn-primary">Filter</button>
+		</form>
+
+		<br>
+
+
+	</div>
+
+	<div class="container-right">
+		<center>
+			<h1>Tea Inventory Management</h1>
+			<br>
+			<br>
+			<button type="button"><a href="http://localhost:8080/homevendor">Add Vendor</a></button>
+			<button type="button"><a href="http://localhost:8080/hometea">Add Tea</a></button>
+			<button type="button"><a href="http://localhost:8080/filterpage">Filter</a></button>
+		</center>
+
+		<br>
+		<div>
+			<table class="center">
+				<thead>
+					<tr>
+						<th>Vendor Name</th>
+						<th>Price</th>
+						<th>Morning Time Quantity</th>
+						<th>Afternoon Time Quantity</th>
+						<th>Evening Time Quantity</th>
+						<th>Total Days Quantity</th>
+						<th>Total Price</th>
+						<th>Create Date</th>
+					</tr>
+				</thead>
+				<tbody th:each="teaResponse : ${listVendors}">
+					<tr>
+						<td th:text="${teaResponse.vendor.vName}"></td>
+						<td th:text="${teaResponse.price}"></td>
+						<td th:text="${teaResponse.morningTimeQty}"></td>
+						<td th:text="${teaResponse.afternoonTimeQty}"></td>
+						<td th:text="${teaResponse.eveningTimeQty}"></td>
+						<td th:text="${teaResponse.totalDaysQty}"></td>
+						<td th:text="${teaResponse.totalPrice}"></td>
+						<td th:text="${teaResponse.createDate}"></td>
+					</tr>
+				</tbody>
+			</table>
+
+
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<script>
+		function validateDateForm() {
+			var startDate = document.getElementById('start-date').value;
+			var endDate = document.getElementById('end-date').value;
+
+			if (startDate === '' || endDate === '') {
+				alert('Please fill in both start date and end date');
+				return false;
+			}
+
+			return true;
+		}
+
+		function validateVendorForm() {
+			var vendorName = document.getElementById('vendor-name').value;
+
+			if (vendorName === '') {
+				alert('Please select a vendor');
+				return false;
+			}
+
+			return true;
+		}
+	</script>
+</body>
+
+</html>

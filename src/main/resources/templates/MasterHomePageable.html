@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vendor Form</title>
+
+	<!-- Add Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+	<style type="text/css">
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+			margin: 0;
+			display: flex;
+			justify-content: space-between;
+			/* Align items to left and right */
+			align-items: center;
+			height: 100vh;
+		}
+
+		.container-left {
+			flex: 20%;
+			/* Take 50% of the space */
+			padding: 20px;
+		}
+
+		.container-right {
+			/* Take 50% of the space */
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-left: 20px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+			border: 1px solid #ccc;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #f2f2f2;
+			border-bottom: 2px solid #ccc;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		tr:hover {
+			background-color: #e3e3e3;
+		}
+
+		.form-control {
+			width: 40%;
+		}
+
+
+
+		/* next, previous button color change */
+
+		.pagination .page-item.active button {
+			background-color: #007bff;
+			/* Set your desired background color */
+			color: #fff;
+			/* Set text color */
+			border-color: #007bff;
+			/* Set border color */
+			/* Add any additional styles as needed */
+		}
+
+		/* Disable pointer events for disabled buttons */
+		.pagination .page-item.disabled button {
+			pointer-events: none;
+		}
+	</style>
+
+</head>
+
+<body>
+	<!--	<div>
+		<p> currentPage: </p>
+		<p th:text="${currentPage}">Text ...</p>
+	</div>
+
+	<div>
+		<p> totalPages: </p>
+		<p th:text="${products.totalPages}"></p>
+	</div>-->
+
+	<div class="container-left">
+		<form class="reset-form" th:action="@{/}" method="post">
+
+			<div class="form-group">
+				<label for="start-date">Start Date (YYYY/MM/DD):</label>
+				<input type="date" class="form-control" id="start-date" name="startDate" pattern="\d{4}/\d{2}/\d{2}"
+					onfocus="setMinStartDate()" />
+			</div>
+			<div class="form-group">
+				<label for="end-date">End Date (YYYY/MM/DD):</label>
+				<input type="date" class="form-control" id="end-date" name="endDate" pattern="\d{4}/\d{2}/\d{2}"
+					onfocus="setMinEndDate()" />
+			</div>
+
+			<div class="form-group">
+				<label for="vendor-name">Vendor Name:</label>
+				<span hidden id="selected-vendor"></span>
+				<select class="form-control" id="vendor-name" name="vendorId">
+					<option disabled selected>Select</option>
+					<option th:each="vendors : ${listVendorNames}" th:value="${vendors.vId}" th:text="${vendors.vName}">
+					</option>
+				</select>
+				<input type="hidden" id="VendorName" th:value="${vName}" />
+			</div>
+			<input type="hidden" name="page" value="0" />
+			<button type="submit" class="btn btn-primary" onclick="saveFormData()">Filter</button>
+			<button type="reset" class="btn btn-secondary" onclick="clearFormFields()">Reset</button>
+
+		</form>
+
+
+		<br>
+
+
+
+	</div>
+
+	<div class="container-right">
+		<center>
+			<h1>Tea Inventory Management</h1>
+			<br>
+			<br>
+			<button type="button"><a href="http://localhost:8080/savevendor">Add Vendor</a></button>
+			<button type="button"><a href="http://localhost:8080/savetea">Add Tea</a></button>
+
+		</center>
+
+		<br>
+		<div>
+			<table class="center">
+				<thead>
+					<tr th:if="${not products.empty}">
+						<th>Vendor Name</th>
+						<th>Price</th>
+						<th>Morning Time Quantity</th>
+						<th>Afternoon Time Quantity</th>
+						<th>Evening Time Quantity</th>
+						<th>Total Days Quantity</th>
+						<th>Total Price</th>
+						<th>Create Date</th>
+					</tr>
+
+					<div th:if="${products.empty}" class="table-responsive">
+						<table class="table table-bordered table-striped">
+							<tbody>
+								<tr>
+									<td colspan="5" class="text-center">No data found for the selected filters.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+				</thead>
+				<tbody th:each="teaResponse : ${products.content}">
+					<tr>
+						<td th:text="${teaResponse.vendor.vName}"></td>
+						<td th:text="${teaResponse.price}"></td>
+						<td th:text="${teaResponse.morningTimeQty} ? ${teaResponse.morningTimeQty} : 0"></td>
+						<td th:text="${teaResponse.afternoonTimeQty} ? ${teaResponse.afternoonTimeQty} : 0"></td>
+						<td th:text="${teaResponse.eveningTimeQty} ? ${teaResponse.eveningTimeQty} : 0"></td>
+						<td th:text="${teaResponse.totalDaysQty}"></td>
+						<td th:text="${teaResponse.totalPrice}"></td>
+						<td th:text="${teaResponse.createDate}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<nav aria-label="Page navigation" th:if="${not products.empty}">
+				<ul class="pagination">
+					<li class="page-item" th:classappend="${currentPage > 0 ? 'disabled' : ''}">
+
+						<form th:action="@{/}" method="post">
+							<input type="hidden" name="vendorId" th:value="${vId}" />
+							<input type="hidden" name="startDate" th:value="${sDate}" />
+							<input type="hidden" name="endDate" th:value="${eDate}" />
+							<input type="hidden" name="page" th:value="${currentPage -1}" />
+							<button type="submit" class="page-item" th:disabled="${currentPage == 0}">
+								Previous
+							</button>
+						</form>
+						<!--<a class="page-link"
+							th:href="@{/previous(page=${currentPage - 1}, vendorId=${vIdPreview},startDate=${sDate},endDate=${eDate})}">Previous</a>-->
+					</li>
+					<li class="page-item" th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+						th:classappend="${currentPage == i ? 'active' : ''}">
+
+						<form th:action="@{/}" method="post">
+							<input type="hidden" name="vendorId" th:value="${vId}" />
+							<input type="hidden" name="startDate" th:value="${sDate}" />
+							<input type="hidden" name="endDate" th:value="${eDate}" />
+							<input type="hidden" name="page" th:value="${i}" />
+							<button type="submit" class="page-item"><span th:text="${i+1}"></span></button>
+
+
+						</form>
+					</li>
+					<li class="page-item" th:classappend="${currentPage == products.totalPages - 1 ? 'disabled' : ''}">
+						<form th:action="@{/}" method="post">
+							<input type="hidden" name="vendorId" th:value="${vId}" />
+							<input type="hidden" name="startDate" th:value="${sDate}" />
+							<input type="hidden" name="endDate" th:value="${eDate}" />
+							<input type="hidden" name="page" th:value="${currentPage +1}" />
+							<button type="submit" class="page-item"
+								th:disabled="${currentPage >= products.totalPages - 1}">
+								Next
+							</button>
+						</form>
+					</li>
+				</ul>
+			</nav>
+
+			<div>
+				<form class="download" th:action="@{/downloadPdf}" method="post" th:if="${not products.empty}">
+					<input type="hidden" name="vendorId" th:value="${vId}">
+					<input type="hidden" name="startDate" id="startId">
+					<input type="hidden" name="endDate" id="endId">
+					<button type="submit" class="btn btn-primary">Export</button>
+				</form>
+			</div>
+			<br>
+			<div>
+				<form class="email" th:action="@{/sendemail}" method="post" th:if="${not products.empty}">
+					<input type="hidden" name="vendorId" th:value="${vId}">
+					<input type="hidden" name="startDate" th:value="${sDate}">
+					<input type="hidden" name="endDate" th:value="${eDate}">
+					<label for="email">Email To:</label>
+					<input type="email" id="email" name="email" required><br><br>
+					<button type="submit" class="btn btn-primary">Send Mail</button>
+				</form>
+			</div>
+
+
+
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.css" rel="stylesheet">
+
+	<script>
+		document.getElementById('startId').value = getStartDate();
+		document.getElementById('endId').value = getEndDate();
+
+		document.getElementById('start-date').value = getStartDate();
+		document.getElementById('end-date').value = getEndDate();
+
+
+		function getStartDate() {
+			return localStorage.getItem("startDate");
+		}
+
+		function getEndDate() {
+			return localStorage.getItem("endDate");
+		}
+
+		function getVendorName() {
+			return localStorage.getItem("vendorName");
+		}
+
+
+
+		let startDate = null;
+		let endDate = null;
+		var selectedVendorId = 0;
+
+		function handleEndDate(event) {
+			localStorage.g
+
+
+		}
+		function handleStartDate() {
+			startDate = event.target.value;
+			document.getElementById('startId').value = startDate;
+
+		}
+
+		function saveFormData() {
+
+
+			var startData = document.getElementById('start-date').value;
+			console.log("startData", startData)
+			localStorage.setItem('startDate', startData);
+
+			var endData = document.getElementById('end-date').value;
+			localStorage.setItem('endDate', endData);
+
+			// var vendorName = document.getElementById('vendor-name').value;
+			// localStorage.setItem('vendorName', vendorName);
+
+			document.getElementById("start-date").setAttribute('value', getStartDate());
+
+			document.getElementById("end-date").setAttribute('value', getEndDate());
+
+			console.log("getVendorName()2 ::: ", getVendorName());
+			document.getElementById(getVendorName()).setAttribute('value', getVendorName());
+			console.log("getVendorName() ::: ", getVendorName());
+
+			// selectedVendorId = Number(vendorName);
+		}
+
+		function validateDateForm() {
+			var startDate = document.getElementById('start-date').value;
+			var endDate = document.getElementById('end-date').value;
+
+			if (startDate === '' || endDate === '') {
+				alert('Please fill in both start date and end date');
+				return false;
+			}
+
+			return true;
+		}
+
+		function validateVendorForm() {
+			var vendorName = document.getElementById('vendor-name').value;
+
+			if (vendorName === '') {
+				alert('Please select a vendor');
+				return false;
+			}
+
+			return true;
+		}
+
+		$('.email').submit(function (event) {
+			event.preventDefault(); // Prevent the default form submission
+
+			// AJAX call to submit the form data
+			$.ajax({
+				type: "POST",
+				url: "/sendemail", // Endpoint to handle form submission
+				data: $(this).serialize(), // Serialize the form data
+				success: function (response) {
+					// Handle success response
+					console.log("Success:", response);
+					$('.toast-body').text('Email sent successfully!');
+					$('.toast').toast('show');
+				},
+				error: function (xhr, status, error) {
+					// Handle error response
+					console.log("Error:", error);
+					// You can display an error message or handle the error appropriately
+				}
+			});
+		});
+
+		<!-------------------------------------------------------------------------------->
+		function setMinStartDate() {
+			var today = new Date().toISOString().split('T')[0];
+			document.getElementById("start-date").setAttribute("max", today);
+		}
+
+		function setMinEndDate() {
+			var today = new Date().toISOString().split('T')[0];
+			document.getElementById("end-date").setAttribute("max", today);
+		}
+
+
+		function clearFormFields() {
+			// Clearing input fields
+			document.getElementById('start-date').value = '';
+			document.getElementById('end-date').value = '';
+			document.getElementById('vendor-name').selectedIndex = 0; // Resetting dropdown to the default option
+		}
+
+		// Function to update label and local storage with the selected option
+		function updateSelectedOption() {
+			var selectElement = document.getElementById('vendor-name');
+			var selectedOption = selectElement.options[selectElement.selectedIndex];
+			var selectedVendorLabel = document.getElementById('selected-vendor');
+
+			// Update label with the selected option
+			selectedVendorLabel.textContent = selectedOption.textContent;
+
+			// Save selected option ID in local storage
+			localStorage.setItem('selectedVendorId', selectedOption.value);
+		}
+
+		// Event listener for when the dropdown selection changes
+		document.getElementById('vendor-name').addEventListener('change', function () {
+			updateSelectedOption();
+		});
+
+		// Function to check for previously selected option in local storage
+		function checkLocalStorage() {
+			var selectedVendorId = localStorage.getItem('selectedVendorId');
+			if (selectedVendorId) {
+				// Select the option in the dropdown based on the stored ID
+				var selectElement = document.getElementById('vendor-name');
+				for (var i = 0; i < selectElement.options.length; i++) {
+					if (selectElement.options[i].value === selectedVendorId) {
+						selectElement.selectedIndex = i;
+						updateSelectedOption(); // Update label with selected option
+						break;
+					}
+				}
+			}
+		}
+
+		// Check local storage on page load
+		checkLocalStorage();
+
+	</script>
+
+	<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" data-autohide="true"
+		style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%);">
+		<div class="toast-header bg-info text-white">
+			<strong class="mr-auto">Notification</strong>
+			<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="toast-body">
+			<!-- Toast message will appear here -->
+		</div>
+	</div>
+
+
+</body>
+
+</html>

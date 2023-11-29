@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Filter Page</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f0f0f0;
+			margin: 0;
+			padding: 20px;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
+
+		.center {
+			margin: auto;
+		}
+
+		.email-form {
+			text-align: center;
+		}
+
+		.total-section {
+			text-align: center;
+		}
+
+		.email-form label,
+		.email-form input {
+			display: block;
+			margin: 10px auto;
+		}
+
+		.email-form button {
+			padding: 10px 20px;
+			background-color: #4CAF50;
+			border: none;
+			color: white;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+		.email-form button:hover {
+			background-color: #45a049;
+		}
+
+		.total-section {
+			text-align: center;
+		}
+	</style>
+	</style>
+</head>
+
+<body>
+	<h1>Teas Inventory Details By Vendor Name :-</h1>
+
+	<br>
+	<!--	<p th:text="${listTeasByDate}"></p>-->
+	<table class="center" border="1">
+
+		<thead>
+
+			<tr>
+				<th>Vendor Name</th>
+				<th>Price</th>
+				<th>Morning Time Quantity</th>
+				<th>Afternoon Time Quantity</th>
+				<th>Evening Time Quantity</th>
+				<th>Total Days Quantity</th>
+				<th>Total Price</th>
+				<th>Create Date</th>
+
+			</tr>
+		</thead>
+
+		<tbody th:each="teaResponse : ${listTeasByVendorName}">
+			<tr>
+				<td th:text="${teaResponse.vendor.vName}"></td>
+				<td th:text="${teaResponse.price}"></td>
+				<td th:text="${teaResponse.morningTimeQty}"></td>
+				<td th:text="${teaResponse.afternoonTimeQty}"></td>
+				<td th:text="${teaResponse.eveningTimeQty}"></td>
+				<td th:text="${teaResponse.totalDaysQty}"></td>
+				<td th:text="${teaResponse.totalPrice}"></td>
+				<td th:text="${teaResponse.createDate}"></td>
+
+			</tr>
+
+		</tbody>
+	</table>
+
+	<div class="total-section">
+		<p>Total Qty:</p>
+		<p th:text="${totalQty}"></p>
+	</div>
+
+	<div class="total-section">
+		<p>Grand Total :-</p>
+		<p th:text="${grandTotalPrice}"> </p>
+	</div>
+
+	<br>
+	<form class="email-form" th:action="@{/sendemailvendorname}" method="post">
+		<label for="to">Email To:</label>
+		<input type="email" id="email" name="email" required><br><br>
+		<input type="hidden" name="vendorName" th:value="${vendorName}">
+
+		<button type="submit">Send Email</button>
+	</form>
+
+
+</body>
+
+</html>

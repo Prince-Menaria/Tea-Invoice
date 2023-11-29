@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vendor Form</title>
+
+	<!-- Add Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+	<style type="text/css">
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+			margin: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+
+		.container {
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			width: 320px;
+		}
+
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f0f0f0;
+			margin: 0;
+			padding: 20px;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+		}
+
+		table,
+		th,
+		td {
+			border: 1px solid black;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
+
+		.center {
+			margin: auto;
+		}
+
+		.email-form {
+			text-align: center;
+		}
+
+		.total-section {
+			text-align: center;
+		}
+
+		.email-form label,
+		.email-form input {
+			display: block;
+			margin: 10px auto;
+		}
+
+		.email-form button {
+			padding: 10px 20px;
+			background-color: #4CAF50;
+			border: none;
+			color: white;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+		.email-form button:hover {
+			background-color: #45a049;
+		}
+
+		.total-section {
+			text-align: center;
+		}
+	</style>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</head>
+
+<body>
+	<div class="container">
+		<center>
+			<h1>Tea Inverntory Management</h1>
+			<br>
+			<br>
+			<button type="button"><a href="http://localhost:8080/homevendor">Add Vendor</a></button>
+			<button type="button"><a href="http://localhost:8080/hometea">Add Tea</a></button>
+			<button type="button"><a href="http://localhost:8080/filterpage">Filter</a></button>
+		</center>
+
+		<br>
+		<div>
+			<table class="center">
+				<thead>
+					<tr>
+						<th>Vendor Name</th>
+						<th>Price</th>
+						<th>Morning Time Quantity</th>
+						<th>Afternoon Time Quantity</th>
+						<th>Evening Time Quantity</th>
+						<th>Total Days Quantity</th>
+						<th>Total Price</th>
+						<th>Create Date</th>
+					</tr>
+				</thead>
+				<tbody th:each="teaResponse : ${products.content}">
+					<tr>
+						<td th:text="${teaResponse.vendor.vName}"></td>
+						<td th:text="${teaResponse.price}"></td>
+						<td th:text="${teaResponse.morningTimeQty}"></td>
+						<td th:text="${teaResponse.afternoonTimeQty}"></td>
+						<td th:text="${teaResponse.eveningTimeQty}"></td>
+						<td th:text="${teaResponse.totalDaysQty}"></td>
+						<td th:text="${teaResponse.totalPrice}"></td>
+						<td th:text="${teaResponse.createDate}"></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<nav aria-label="Page navigation">
+				<ul class="pagination">
+					<li class="page-item" th:classappend="${currentPage == 0 ? 'enabled' : ''}">
+						<a class="page-link" th:href="@{/products(page=0)}">First</a>
+					</li>
+					<li class="page-item" th:classappend="${currentPage == 0 ? 'enabled' : ''}">
+						<a class="page-link" th:href="@{/products(page=${currentPage - 1})}">Previous</a>
+					</li>
+					<li class="page-item" th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+						th:classappend="${currentPage == i ? 'active' : ''}">
+						<a class="page-link" th:href="@{/products(page=${i})}" th:text="${i + 1}"></a>
+					</li>
+					<li class="page-item" th:classappend="${currentPage == products.totalPages - 1 ? 'enabled' : ''}">
+						<a class="page-link" th:href="@{/products(page=${currentPage + 1})}">Next</a>
+					</li>
+					<li class="page-item" th:classappend="${currentPage == products.totalPages - 1 ? 'enabled' : ''}">
+						<a class="page-link" th:href="@{/products(page=${products.totalPages - 1})}">Last</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+
+
+
+	<!-- Add Bootstrap JavaScript dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

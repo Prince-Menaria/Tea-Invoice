@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vendor Form</title>
+
+	<!-- Add Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+	<style type="text/css">
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+			margin: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+
+		.container {
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			width: 320px;
+		}
+
+		.toast-above-form {
+			position: absolute;
+			top: 20%;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 1000;
+		}
+
+
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+			margin: 0;
+			display: flex;
+			justify-content: space-between;
+			/* Align items to left and right */
+			align-items: center;
+			height: 100vh;
+		}
+
+		.container-left {
+			flex: 20%;
+			/* Take 50% of the space */
+			padding: 20px;
+		}
+
+		.container-right {
+			/* Take 50% of the space */
+			padding: 20px;
+			background-color: #fff;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin-left: 20px;
+		}
+
+
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-bottom: 20px;
+			border: 1px solid #ccc;
+		}
+
+		th,
+		td {
+			padding: 8px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #f2f2f2;
+			border-bottom: 2px solid #ccc;
+		}
+
+		tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		tr:hover {
+			background-color: #e3e3e3;
+		}
+	</style>
+
+
+</head>
+
+<body>
+
+	<!--	<div>
+		<p> currentPage: </p>
+		<p th:text="${products.content}">Text ...</p>
+	</div>-->
+
+	<div class="container">
+
+		<form action="/savevendor" method="post">
+			<div class="form-group">
+				<label for="vendorName">Vendor Name:</label>
+				<input type="text" class="form-control" id="vendorName" name="vendorName" required>
+			</div>
+			<div class="form-group">
+				<label for="vendorName">Vendor Mobile Number:</label>
+				<input type="text" class="form-control" id="vendorName" name="vendorNumber" required>
+			</div>
+
+			<center><button type="submit" class="btn btn-primary">Submit</button></center>
+			<br>
+			<center> <button type="reset" class="btn btn-secondary" onclick="window.location.href='/'">Back</button>
+			</center>
+			
+			<input type="hidden" name="page" value="0" />
+		</form>
+	</div>
+
+
+	<div class="container-right">
+		<center>
+			<h1>Vendor Inventory Management</h1>
+			<br>
+			<br>
+
+		</center>
+
+		<br>
+
+		<div>
+			<table class="center">
+				<thead>
+					<tr th:if="${not products.empty}">
+						<th>Vendor Name</th>
+						<th>Vendor Number</th>
+					</tr>
+					<div th:if="${products.empty}" class="table-responsive">
+						<table class="table table-bordered table-striped">
+							<tbody>
+								<tr>
+									<td colspan="5" class="text-center">No data found for the selected filters.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</thead>
+				<tbody th:each="teaResponse : ${products.content}">
+					<tr>
+						<td th:text="${teaResponse.vendorName}"></td>
+						<td th:text="${teaResponse.vendorNumber}"></td>
+
+					</tr>
+				</tbody>
+			</table>
+			<nav aria-label="Page navigation" th:if="${not products.empty}">
+				<ul class="pagination">
+					<li class="page-item" th:classappend="${currentPage > 0 ? 'disabled' : ''}">
+
+						<form th:action="@{/savevendor}" method="get">
+							<input type="hidden" name="page" th:value="${currentPage -1}" />
+							<button type="submit" class="page-item" th:disabled="${currentPage == 0}">
+								Previous
+							</button>
+						</form>
+						<!--<a class="page-link"
+							th:href="@{/previous(page=${currentPage - 1}, vendorId=${vIdPreview},startDate=${sDate},endDate=${eDate})}">Previous</a>-->
+					</li>
+					<li class="page-item" th:each="i : ${#numbers.sequence(0, products.totalPages - 1)}"
+						th:classappend="${currentPage == i ? 'active' : ''}">
+
+						<form th:action="@{/savevendor}" method="get">
+							<input type="hidden" name="page" th:value="${i}" />
+							<button type="submit" class="page-item"><span th:text="${i+1}"></span></button>
+
+
+						</form>
+					</li>
+					<li class="page-item" th:classappend="${currentPage == products.totalPages - 1 ? 'disabled' : ''}">
+						<form th:action="@{/savevendor}" method="get">
+							<input type="hidden" name="page" th:value="${currentPage +1}" />
+							<button type="submit" class="page-item"
+								th:disabled="${currentPage >= products.totalPages - 1}">
+								Next
+							</button>
+						</form>
+					</li>
+				</ul>
+			</nav>
+
+
+		</div>
+
+	</div>
+
+	<!-- Add Bootstrap JavaScript dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+	<script>
+
+		function showSuccessMessage() {
+			const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+			successToast.show();
+		}
+
+		function showFailedMessage() {
+			const failedToast = new bootstrap.Toast(document.getElementById('failedToast'));
+			failedToast.show();
+		}
+
+
+		// Assuming you have a server endpoint for adding water inventory data
+		const form = document.querySelector('form');
+		const myAlert = document.querySelector('myAlert');
+
+		form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			const formData = new FormData(form);
+			const response = await fetch('/savevendor', {
+				method: 'POST',
+				body: formData
+			});
+
+			let res = await response.json();
+
+
+			if (res.message == "Duplicate Vendor Mobile Number Not Allowed !!") {
+				const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+			}
+
+			if (response.ok) {
+
+				// Data saved successfully, you can redirect to a retrieval page
+				showSuccessMessage();
+
+				form.reset();
+			}
+
+		});
+
+
+		$('.form-control').submit(function (event) {
+			event.preventDefault(); // Prevent the default form submission
+
+			// AJAX call to submit the form data
+			$.ajax({
+				type: "POST",
+				url: "/savevendor", // Endpoint to handle form submission
+				data: $(this).serialize(), // Serialize the form data
+				success: function (response) {
+					// Handle success response
+
+				},
+				error: function (xhr, status, error) {
+					// Handle error response
+					console.log("Error:", error);
+					$('.toast-body').text('Duplicate Vendor Mobile Number Not Allowed !!');
+					$('.toast').toast('show');
+				}
+			});
+		});
+	</script>
+
+	<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" data-autohide="true"
+		style="position: absolute; top: 10%; left: 50%; transform: translate(-50%, -50%);">
+		<div class="toast-header bg-info text-white">
+			<strong class="mr-auto">Notification</strong>
+			<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="toast-body">
+			<!-- Toast message will appear here -->
+		</div>
+	</div>
+
+
+
+	<div id="failedToast" class="toast toast-above-form" role="alert" aria-live="assertive" aria-atomic="true"
+		data-delay="5000">
+		<div class="toast-body">
+			Duplicate Vendor Mobile Number Not Allowed !!
+		</div>
+	</div>
+
+	<div id="successToast" class="toast toast-above-form" role="alert" aria-live="assertive" aria-atomic="true"
+		data-delay="5000">
+		<div class="toast-body">
+			Data Saved Successfully !!!
+		</div>
+	</div>
+</body>
+
+</html>
