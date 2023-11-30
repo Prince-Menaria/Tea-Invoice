@@ -428,10 +428,8 @@ public class TeaService {
 
 	public Page<TeaResponse> findPaginatedForVendorName(Pageable pageable, List<Tea> listTeas) {
 
-
 		List<TeaResponse> teas = convertTeaToTeaResponseByDate(listTeas);
 
-		System.err.println("Teas ::->" + teas);
 //		teas.stream().forEach(e -> {
 //			System.err.println("All Data total price::" + e.getTotalPrice());
 //			System.out.println("Vendor name ::" + e.getVendor().getVName());

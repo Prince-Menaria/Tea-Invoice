@@ -68,11 +68,7 @@ public class HomeController {
 	public String masterHomePageableView(Model model, @RequestParam(defaultValue = "1") int page,
 			@ModelAttribute PagedRequest pagedRequest) {
 
-		System.err.println("url ::" + url);
-
 		Page<TeaResponse> listVendors = teaService.getAllTeasPage(PageRequest.of(page, 5), pagedRequest);
-
-		System.err.println("list ::" + listVendors.getContent());
 
 		model.addAttribute("url", url);
 		model.addAttribute("products", listVendors);
