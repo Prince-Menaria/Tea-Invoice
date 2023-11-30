@@ -29,8 +29,10 @@ public class EmailConfig {
 			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
 			// file attachment configuration
-			FileSystemResource resource = new FileSystemResource(new File(
-					"/home/indianic/Music/SpringExcelProject/TeaManagmentSystem/src/main/resources/data.pdf"));
+//			FileSystemResource resource = new FileSystemResource(new File(
+//					"/home/indianic/Music/SpringExcelProject/TeaManagmentSystem/src/main/resources/data.pdf"));
+
+			FileSystemResource resource = new FileSystemResource(new File("src/main/resources/static/data.pdf"));
 
 			helper.setTo(to);
 			helper.setSubject(subject);

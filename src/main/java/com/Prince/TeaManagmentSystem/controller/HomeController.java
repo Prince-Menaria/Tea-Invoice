@@ -72,6 +72,8 @@ public class HomeController {
 
 		Page<TeaResponse> listVendors = teaService.getAllTeasPage(PageRequest.of(page, 5), pagedRequest);
 
+		System.err.println("list ::" + listVendors.getContent());
+
 		model.addAttribute("url", url);
 		model.addAttribute("products", listVendors);
 		model.addAttribute("currentPage", page);

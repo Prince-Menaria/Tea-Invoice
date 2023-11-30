@@ -57,7 +57,9 @@ public class TeaService {
 		} else if (pagedRequest.getStartDate() != null && pagedRequest.getEndDate() != null) {
 			response = getAllTeasByDateForPagedRequest(pagedRequest);
 		} else {
-			response = getAllTeasOrderedByIdDesc();
+//			response = getAllTeasOrderedByIdDesc();
+			response = getAllTeas();
+
 		}
 
 		return findPaginatedForVendorName(pageable, response);
@@ -213,7 +215,7 @@ public class TeaService {
 
 		document.close();
 
-		FileOutputStream fileOut = new FileOutputStream("src/main/resources/data.pdf");
+		FileOutputStream fileOut = new FileOutputStream("src/main/resources/static/data.pdf");
 
 		fileOut.write(outputStream.toByteArray());
 
@@ -273,7 +275,7 @@ public class TeaService {
 
 		document.close();
 
-		FileOutputStream fileOut = new FileOutputStream("src/main/resources/data.pdf");
+		FileOutputStream fileOut = new FileOutputStream("src/main/resources/static/data.pdf");
 
 		fileOut.write(outputStream.toByteArray());
 
@@ -426,8 +428,10 @@ public class TeaService {
 
 	public Page<TeaResponse> findPaginatedForVendorName(Pageable pageable, List<Tea> listTeas) {
 
+
 		List<TeaResponse> teas = convertTeaToTeaResponseByDate(listTeas);
 
+		System.err.println("Teas ::->" + teas);
 //		teas.stream().forEach(e -> {
 //			System.err.println("All Data total price::" + e.getTotalPrice());
 //			System.out.println("Vendor name ::" + e.getVendor().getVName());
