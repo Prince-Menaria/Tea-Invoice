@@ -215,7 +215,11 @@ public class TeaService {
 
 		document.close();
 
-		FileOutputStream fileOut = new FileOutputStream("src/main/resources/static/data.pdf");
+		System.err.println("before pdf ...");
+
+		FileOutputStream fileOut = new FileOutputStream("/src/main/resources/static/data.pdf");
+
+		System.err.println("after pdf ...");
 
 		fileOut.write(outputStream.toByteArray());
 
