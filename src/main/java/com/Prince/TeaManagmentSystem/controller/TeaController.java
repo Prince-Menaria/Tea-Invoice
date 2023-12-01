@@ -1,9 +1,7 @@
 package com.Prince.TeaManagmentSystem.controller;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,17 +39,30 @@ public class TeaController {
 	}
 
 	@PostMapping("/downloadPdf")
-	public ResponseEntity<InputStreamResource> downloadPDFOfListTeas(@ModelAttribute TestRequest testRequest)
+	public ResponseEntity<byte[]> downloadPDFOfListTeas(@ModelAttribute TestRequest testRequest)
 			throws DocumentException, IOException {
 
 		byte[] pdfContent = teaService.downloadToPdfByFilters(testRequest);
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Disposition", "inline; filename=example.pdf");
+		headers.setContentType(MediaType.APPLICATION_PDF);
+		headers.setContentDispositionFormData("attachment", "data.pdf");
 
-		ByteArrayInputStream bis = new ByteArrayInputStream(pdfContent);
-		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
-				.body(new InputStreamResource(bis));
+		return ResponseEntity.ok().headers(headers).body(pdfContent);
 
 	}
+
+//	@PostMapping("/downloadPdf")
+//	public ResponseEntity<InputStreamResource> downloadPDFOfListTeas(@ModelAttribute TestRequest testRequest)
+//			throws DocumentException, IOException {
+//
+//		byte[] pdfContent = teaService.downloadToPdfByFilters(testRequest);
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.add("Content-Disposition", "inline; filename=example.pdf");
+//
+//		ByteArrayInputStream bis = new ByteArrayInputStream(pdfContent);
+//		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
+//				.body(new InputStreamResource(bis));
+//
+//	}
 
 }

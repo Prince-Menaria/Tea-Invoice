@@ -215,15 +215,13 @@ public class TeaService {
 
 		document.close();
 
-		System.err.println("before pdf ...");
-
-		FileOutputStream fileOut = new FileOutputStream("/src/main/resources/static/data.pdf");
-
-		System.err.println("after pdf ...");
-
-		fileOut.write(outputStream.toByteArray());
-
-		String subject = "Tea Inventory Report !!!";
+//		System.err.println("before pdf ...");
+//
+//		FileOutputStream fileOut = new FileOutputStream("/src/main/resources/static/data.pdf");
+//
+//		System.err.println("after pdf ...");
+//
+//		fileOut.write(outputStream.toByteArray());
 
 		return outputStream.toByteArray();
 
