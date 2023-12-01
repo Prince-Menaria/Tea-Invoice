@@ -280,11 +280,13 @@ public class TeaService {
 		FileOutputStream fileOut = new FileOutputStream("src/main/resources/static/data.pdf");
 
 		fileOut.write(outputStream.toByteArray());
+		
+		byte[] attachEmail = outputStream.toByteArray();
 
 		String subject = "Tea Inventory Report !!!";
 
 		if (!email.isEmpty()) {
-			emailConfig.sendEmail(email, subject);
+			emailConfig.sendEmail(email, subject, attachEmail);
 		}
 		return outputStream.toByteArray();
 

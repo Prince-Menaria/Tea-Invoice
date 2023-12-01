@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -20,6 +21,37 @@ public class EmailConfig {
 
 	@Value("${spring.mail.username}")
 	public String username;
+
+	public String sendEmail(String to, String subject, byte[] attachEmail) throws IOException {
+
+		try {
+
+			MimeMessage message = javaMailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+			// file attachment configuration
+//			FileSystemResource resource = new FileSystemResource(new File(
+//					"/home/indianic/Music/SpringExcelProject/TeaManagmentSystem/src/main/resources/data.pdf"));
+
+//			FileSystemResource resource = new FileSystemResource(new File("src/main/resources/static/data.pdf"));
+
+			helper.setTo(to);
+			helper.setSubject(subject);
+			helper.setFrom(username);
+			helper.setText("hello Prince , your payment invoice here");
+			
+			helper.addAttachment("TeaInventoryReport.pdf", new ByteArrayResource(attachEmail));
+
+			javaMailSender.send(message);
+
+			return "Email send successfull !!!";
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "error while sending email";
+
+	}
 
 	public String sendEmail(String to, String subject) throws IOException {
 
