@@ -99,9 +99,6 @@
 		<p th:text="${products.totalPages}"></p>
 	</div>-->
 
-	<!--<p th:text="${products.content}"></p>-->
-
-
 	<div class="container-left">
 		<form class="reset-form" th:action="@{/}" method="post">
 
@@ -128,7 +125,8 @@
 			</div>
 			<input type="hidden" name="page" value="0" />
 			<button type="submit" class="btn btn-primary" onclick="saveFormData()">Filter</button>
-			<button type="reset" class="btn btn-secondary" onclick="clearFormFields()">Reset</button>
+			<button type="reset" class="btn btn-secondary" onclick="clearFormFields()">Clear</button>
+			<button type="button"><a href="/">Reset</a></button>
 
 		</form>
 
@@ -144,8 +142,15 @@
 			<h1>Tea Inventory Management</h1>
 			<br>
 			<br>
-			<button type="button"><a href="https://teainvoicer.onrender.com/savevendor">Add Vendor</a></button>
-			<button type="button"><a href="https://teainvoicer.onrender.com/savetea">Add Tea</a></button>
+			<!--<button type="button"><a href="https://teainvoicer.onrender.com/savevendor">Add Vendor</a></button>
+			<button type="button"><a href="https://teainvoicer.onrender.com/savetea">Add Tea</a></button>-->
+
+			<!--<button type="button"><a href="#" id="AddVendor">Add Vendor</a></button>-->
+
+
+			<a th:href="${saveTeaUrl}" class="btn btn-primary">Add Tea</a>
+			<a th:href="${saveVendorUrl}" class="btn btn-primary">Add Vendor</a>
+
 
 		</center>
 
@@ -257,13 +262,16 @@
 		</div>
 	</div>
 
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+	<script src=" https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 	<link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.css" rel="stylesheet">
 
 	<script>
+
 		document.getElementById('startId').value = getStartDate();
 		document.getElementById('endId').value = getEndDate();
 

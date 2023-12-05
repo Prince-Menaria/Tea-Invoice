@@ -57,8 +57,7 @@ public class TeaService {
 		} else if (pagedRequest.getStartDate() != null && pagedRequest.getEndDate() != null) {
 			response = getAllTeasByDateForPagedRequest(pagedRequest);
 		} else {
-//			response = getAllTeasOrderedByIdDesc();
-			response = getAllTeas();
+			response = getAllTeasOrderedByIdDesc();
 
 		}
 
@@ -71,6 +70,7 @@ public class TeaService {
 
 			responses = teaRepository.findByDate(pagedRequest.getStartDate(), pagedRequest.getEndDate());
 			return responses;
+
 		}
 		return null;
 
@@ -280,7 +280,7 @@ public class TeaService {
 //		FileOutputStream fileOut = new FileOutputStream("src/main/resources/static/data.pdf");
 //
 //		fileOut.write(outputStream.toByteArray());
-		
+
 		byte[] attachEmail = outputStream.toByteArray();
 
 		String subject = "Tea Inventory Report !!!";

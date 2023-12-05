@@ -36,8 +36,14 @@ public class HomeController {
 
 	private final TeaService teaService;
 
-	@Value("${root.url}")
+	@Value("${frontUrl}")
 	public String url;
+	
+	@Value("${saveVendorUrl}")
+	public String saveVendorUrl;
+	
+	@Value("${saveTeaUrl}")
+	public String saveTeaUrl;
 
 	@GetMapping("/downloadPdf")
 	public ResponseEntity<String> downloadPDFOfListTeas(@RequestParam String vendorName)
@@ -70,6 +76,8 @@ public class HomeController {
 
 		Page<TeaResponse> listVendors = teaService.getAllTeasPage(PageRequest.of(page, 5), pagedRequest);
 
+		model.addAttribute("saveVendorUrl", saveVendorUrl);
+		model.addAttribute("saveTeaUrl", saveTeaUrl);
 		model.addAttribute("url", url);
 		model.addAttribute("products", listVendors);
 		model.addAttribute("currentPage", page);
@@ -189,15 +197,5 @@ public class HomeController {
 
 		return "welcome-vendorName-pagination";
 	}
-
-	/*
-	 * @GetMapping("/test") public String view(Model model) { List<TeaResponse>
-	 * listVendors = teaService.convertListTeasToTeaResponses();
-	 * model.addAttribute("listVendors", listVendors);
-	 * 
-	 * List<Vendor> listVendorNames = vendorService.getAllVendors();
-	 * model.addAttribute("listVendorNames", listVendorNames); return "MasterHome";
-	 * }
-	 */
 
 }
