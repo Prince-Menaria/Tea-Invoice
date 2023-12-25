@@ -53,6 +53,7 @@ public class TeaService {
 
 	private void deleteTeas() {
 		teaRepository.deleteAll();
+		System.err.println();
 	}
 
 	public Page<TeaResponse> getAllTeasPage(Pageable pageable, PagedRequest pagedRequest) {
