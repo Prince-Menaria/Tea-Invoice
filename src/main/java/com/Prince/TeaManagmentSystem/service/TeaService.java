@@ -1,10 +1,10 @@
 package com.Prince.TeaManagmentSystem.service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +45,14 @@ public class TeaService {
 
 	private Tea save(Tea tea) {
 		return teaRepository.save(tea);
+	}
+
+	public void allDeleteTeas() {
+		deleteTeas();
+	}
+
+	private void deleteTeas() {
+		teaRepository.deleteAll();
 	}
 
 	public Page<TeaResponse> getAllTeasPage(Pageable pageable, PagedRequest pagedRequest) {
@@ -375,6 +383,8 @@ public class TeaService {
 
 		}
 
+		convertListTeasToTeaResponses.sort(Comparator.comparing(TeaResponse::getCreateDate).reversed());
+
 		if (testRequest.getEmail() != null) {
 			return sendInvoicesToEmailAsPdfFormat(convertListTeasToTeaResponses, testRequest.getEmail());
 		}
@@ -409,6 +419,9 @@ public class TeaService {
 	public Page<TeaResponse> findPaginatedForPageResponse(Pageable pageable, PagedRequest pagedRequest) {
 
 		List<TeaResponse> listTeasResponse = getAllTeasByDateByVendorByVendorAndDate(pagedRequest);
+
+		listTeasResponse.sort(Comparator.comparing(TeaResponse::getCreateDate).reversed());
+
 		int pageSize = pageable.getPageSize();
 		int currentPage = pageable.getPageNumber();
 
@@ -433,6 +446,8 @@ public class TeaService {
 	public Page<TeaResponse> findPaginatedForVendorName(Pageable pageable, List<Tea> listTeas) {
 
 		List<TeaResponse> teas = convertTeaToTeaResponseByDate(listTeas);
+
+		teas.sort(Comparator.comparing(TeaResponse::getCreateDate).reversed());
 
 //		teas.stream().forEach(e -> {
 //			System.err.println("All Data total price::" + e.getTotalPrice());

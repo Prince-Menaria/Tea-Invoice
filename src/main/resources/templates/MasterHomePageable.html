@@ -7,7 +7,8 @@
 	<title>Vendor Form</title>
 
 	<!-- Add Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https:/stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<style type="text/css">
 		body {
@@ -126,15 +127,11 @@
 			<input type="hidden" name="page" value="0" />
 			<button type="submit" class="btn btn-primary" onclick="saveFormData()">Filter</button>
 			<button type="reset" class="btn btn-secondary" onclick="clearFormFields()">Clear</button>
-			<button type="button"><a href="/">Reset</a></button>
 
+			<!--<button type="reset" class="btn btn-warning" onclick="clearFormFields()"><a href="/">Reset</a></button>-->
+			<button type="reset" class="btn btn-warning"><a href="/">Reset</a></button>
 		</form>
-
-
 		<br>
-
-
-
 	</div>
 
 	<div class="container-right">
@@ -144,14 +141,10 @@
 			<br>
 			<!--<button type="button"><a href="https://teainvoicer.onrender.com/savevendor">Add Vendor</a></button>
 			<button type="button"><a href="https://teainvoicer.onrender.com/savetea">Add Tea</a></button>-->
-
 			<!--<button type="button"><a href="#" id="AddVendor">Add Vendor</a></button>-->
-
 
 			<a th:href="${saveTeaUrl}" class="btn btn-primary">Add Tea</a>
 			<a th:href="${saveVendorUrl}" class="btn btn-primary">Add Vendor</a>
-
-
 		</center>
 
 		<br>
@@ -218,8 +211,6 @@
 							<input type="hidden" name="endDate" th:value="${eDate}" />
 							<input type="hidden" name="page" th:value="${i}" />
 							<button type="submit" class="page-item"><span th:text="${i+1}"></span></button>
-
-
 						</form>
 					</li>
 					<li class="page-item" th:classappend="${currentPage == products.totalPages - 1 ? 'disabled' : ''}">
@@ -242,7 +233,9 @@
 					<input type="hidden" name="vendorId" th:value="${vId}">
 					<input type="hidden" name="startDate" id="startId">
 					<input type="hidden" name="endDate" id="endId">
-					<button type="submit" class="btn btn-primary">Export</button>
+					<button id="sendExportPdf" type="submit" class="btn btn-primary"
+						onclick="sendExportInfo()">Export</button>
+					<i id="exportLoader" class="fa fa-spinner fa-spin" style="font-size:24px"></i>
 				</form>
 			</div>
 			<br>
@@ -253,7 +246,9 @@
 					<input type="hidden" name="endDate" th:value="${eDate}">
 					<label for="email">Email To:</label>
 					<input type="email" id="email" name="email" required><br><br>
-					<button type="submit" class="btn btn-primary">Send Mail</button>
+					<button id="sendEmail" type="submit" class="btn btn-primary" onclick="sendEmailInfo()">Send
+						Mail</button>
+					<i id="emailLoader" class="fa fa-spinner fa-spin" style="font-size:24px"></i>
 				</form>
 			</div>
 
@@ -278,6 +273,9 @@
 		document.getElementById('start-date').value = getStartDate();
 		document.getElementById('end-date').value = getEndDate();
 
+		document.getElementById('emailLoader').hidden = true;
+
+		document.getElementById('exportLoader').hidden = true;
 
 		function getStartDate() {
 			return localStorage.getItem("startDate");
@@ -318,9 +316,6 @@
 			var endData = document.getElementById('end-date').value;
 			localStorage.setItem('endDate', endData);
 
-			// var vendorName = document.getElementById('vendor-name').value;
-			// localStorage.setItem('vendorName', vendorName);
-
 			document.getElementById("start-date").setAttribute('value', getStartDate());
 
 			document.getElementById("end-date").setAttribute('value', getEndDate());
@@ -328,8 +323,6 @@
 			console.log("getVendorName()2 ::: ", getVendorName());
 			document.getElementById(getVendorName()).setAttribute('value', getVendorName());
 			console.log("getVendorName() ::: ", getVendorName());
-
-			// selectedVendorId = Number(vendorName);
 		}
 
 		function validateDateForm() {
@@ -368,6 +361,8 @@
 					console.log("Success:", response);
 					$('.toast-body').text('Email sent successfully!');
 					$('.toast').toast('show');
+					document.getElementById('emailLoader').hidden = true;
+					document.getElementById('sendEmail').hidden = false;
 				},
 				error: function (xhr, status, error) {
 					// Handle error response
@@ -376,6 +371,32 @@
 				}
 			});
 		});
+
+
+		/*
+		$('.download').submit(function (event) {
+			event.preventDefault(); // Prevent the default form submission
+
+			// AJAX call to submit the form data
+			$.ajax({
+				type: "POST",
+				url: "/downloadPdf", // Endpoint to handle form submission
+				data: $(this).serialize(), // Serialize the form data
+				success: function (response) {
+					// Handle success response
+					//	console.log("Success:", response);
+					//	$('.toast-body').text('Export successfull !!');
+					//	$('.toast').toast('show');
+					document.getElementById('exportLoader').hidden = true;
+					document.getElementById('sendExportPdf').hidden = false;
+				},
+				error: function (xhr, status, error) {
+					// Handle error response
+					console.log("Error:", error);
+					// You can display an error message or handle the error appropriately
+				}
+			});
+		});*/
 
 		<!-------------------------------------------------------------------------------->
 		function setMinStartDate() {
@@ -428,6 +449,17 @@
 					}
 				}
 			}
+		}
+
+		function sendEmailInfo() {
+			document.getElementById('sendEmail').hidden = true;
+			document.getElementById('emailLoader').hidden = false
+		}
+
+		function sendExportInfo() {
+			document.getElementById('sendExportPdf').hidden = true;
+			document.getElementById('exportLoader').hidden = false;
+
 		}
 
 		// Check local storage on page load

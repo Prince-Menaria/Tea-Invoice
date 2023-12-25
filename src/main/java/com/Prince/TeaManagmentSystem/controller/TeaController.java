@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,6 +50,11 @@ public class TeaController {
 
 		return ResponseEntity.ok().headers(headers).body(pdfContent);
 
+	}
+
+	@DeleteMapping("/removeTeas")
+	public void deleteTeas() {
+		teaService.allDeleteTeas();
 	}
 
 //	@PostMapping("/downloadPdf")

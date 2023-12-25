@@ -38,10 +38,10 @@ public class HomeController {
 
 	@Value("${frontUrl}")
 	public String url;
-	
+
 	@Value("${saveVendorUrl}")
 	public String saveVendorUrl;
-	
+
 	@Value("${saveTeaUrl}")
 	public String saveTeaUrl;
 
