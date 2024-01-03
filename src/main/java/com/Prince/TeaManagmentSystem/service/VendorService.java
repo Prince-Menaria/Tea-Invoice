@@ -30,6 +30,8 @@ public class VendorService {
 	public VendorResponse createVendor(HttpServletRequest request) throws Exception {
 		String vendorName = request.getParameter("vendorName");
 		String vendorNumber = request.getParameter("vendorNumber");
+
+		System.err.println(":::::::::::: -----" + vendorName);
 		VendorResponse response = new VendorResponse();
 		if (vendorNumber != null) {
 			Vendor findByVendorNumber = vendorRepository.findByNumber(vendorNumber);
@@ -103,6 +105,40 @@ public class VendorService {
 		Matcher match = ptrn.matcher(mobileNumber);
 
 		return (match.find() && match.group().equals(mobileNumber));
+	}
+
+	public VendorResponse createVendor(VendorRequest vendorRequest) throws Exception {
+//		String vendorName = request.getParameter("vendorName");
+//		String vendorNumber = request.getParameter("vendorNumber");
+
+		System.err.println(":::::::::::: -----" + vendorRequest.getVendorName());
+		VendorResponse response = new VendorResponse();
+		if (vendorRequest.getVendorNumber() != null) {
+			Vendor findByVendorNumber = vendorRepository.findByNumber(vendorRequest.getVendorNumber());
+
+			if (findByVendorNumber != null) {
+
+				throw new TeaNotFoundException("Duplicate Vendor Mobile Number Not Allowed !!");
+			}
+
+		}
+
+//		VendorRequest vendorRequest = new VendorRequest();
+//		vendorRequest.setVendorName(vendorName);
+//		vendorRequest.setVendorNumber(vendorNumber);
+
+		if (!vendorRequest.getVendorName().isEmpty()) {
+			Vendor vendor = new Vendor();
+
+			vendor.setVName(vendorRequest.getVendorName());
+			vendor.setNumber(vendorRequest.getVendorNumber());
+			Vendor saveVendor = vendorRepository.save(vendor);
+			response.setMsg("Vendor Save Successfully !!!");
+			return response;
+		}
+		response.setMsg("Duplicate Vendor Number Not Allowed !!");
+		return response;
+
 	}
 
 }

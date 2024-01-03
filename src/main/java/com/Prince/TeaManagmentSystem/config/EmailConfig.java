@@ -38,8 +38,9 @@ public class EmailConfig {
 			helper.setTo(to);
 			helper.setSubject(subject);
 			helper.setFrom(username);
-			helper.setText("hello Prince , your payment invoice here");
-			
+			helper.setText("hello,");
+			helper.setText("your payment invoice here");
+
 			helper.addAttachment("TeaInventoryReport.pdf", new ByteArrayResource(attachEmail));
 
 			javaMailSender.send(message);
@@ -69,7 +70,8 @@ public class EmailConfig {
 			helper.setTo(to);
 			helper.setSubject(subject);
 			helper.setFrom(username);
-			helper.setText("hello Prince , your payment invoice here");
+			helper.setText("hello,");
+			helper.setText("your payment invoice here");
 			helper.addAttachment(resource.getFilename(), resource, "application/pdf");
 
 			javaMailSender.send(message);

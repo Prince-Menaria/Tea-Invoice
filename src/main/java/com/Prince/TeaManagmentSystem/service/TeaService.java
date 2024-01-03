@@ -43,6 +43,8 @@ public class TeaService {
 
 	private final EmailConfig emailConfig;
 
+	private double fixed_price;
+
 	private Tea save(Tea tea) {
 		return teaRepository.save(tea);
 	}
@@ -190,6 +192,12 @@ public class TeaService {
 
 		addTableHeader(table);
 
+		listTeas.forEach(p -> {
+			fixed_price = p.getPrice();
+		});
+
+		Long grandTotalDaysQty = listTeas.stream().mapToLong(q -> q.getTotalDaysQty()).sum();
+
 		Double grandTotal = listTeas.stream().mapToDouble(t -> t.getTotalPrice()).sum();
 
 		listTeas.stream().forEach(listTeasDetails -> {
@@ -221,6 +229,8 @@ public class TeaService {
 
 		document.add(table);
 		document.add(new Paragraph("Grand Total : " + grandTotal + " INR"));
+		document.add(new Paragraph("Grand Total Quantity : " + grandTotalDaysQty));
+		document.add(new Paragraph("Fixed Price : " + fixed_price + " INR"));
 
 		document.close();
 
@@ -253,6 +263,12 @@ public class TeaService {
 
 		addTableHeader(table);
 
+		listTeas.forEach(p -> {
+			fixed_price = p.getPrice();
+		});
+
+		Long grandTotalDaysQty = listTeas.stream().mapToLong(q -> q.getTotalDaysQty()).sum();
+
 		Double grandTotal = listTeas.stream().mapToDouble(t -> t.getTotalPrice()).sum();
 
 		listTeas.stream().forEach(listTeasDetails -> {
@@ -283,6 +299,8 @@ public class TeaService {
 
 		document.add(table);
 		document.add(new Paragraph("Grand Total : " + grandTotal + " INR"));
+		document.add(new Paragraph("Grand Total Quantity : " + grandTotalDaysQty));
+		document.add(new Paragraph("Fixed Price : " + fixed_price + " INR"));
 
 		document.close();
 
@@ -339,6 +357,8 @@ public class TeaService {
 			}
 
 			List<TeaResponse> emailResponse = convertTeaToTeaResponseByDate(emptyListTea);
+
+			emailResponse.sort(Comparator.comparing(TeaResponse::getCreateDate).reversed());
 
 			sendInvoicesToEmailAsPdfFormat(emailResponse, email);
 		}

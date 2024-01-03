@@ -71,7 +71,7 @@ public class HomeController {
 	}
 
 	@GetMapping("/")
-	public String masterHomePageableView(Model model, @RequestParam(defaultValue = "1") int page,
+	public String masterHomePageableView(Model model, @RequestParam(defaultValue = "0") int page,
 			@ModelAttribute PagedRequest pagedRequest) {
 
 		Page<TeaResponse> listVendors = teaService.getAllTeasPage(PageRequest.of(page, 5), pagedRequest);
