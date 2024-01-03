@@ -369,6 +369,15 @@ public class TeaService {
 	public byte[] downloadToPdfByFilters(TestRequest testRequest) throws DocumentException, IOException {
 		List<TeaResponse> convertListTeasToTeaResponses = new ArrayList<>();
 
+		if (testRequest.getVendorId() == null && testRequest.getEmail() == null && testRequest.getStartDate().equals("")
+				&& testRequest.getEndDate().equals("")) {
+
+			List<Tea> allTeasRes = getAllTeas();
+			convertListTeasToTeaResponses = convertTeaToTeaResponseByDate(allTeasRes);
+			convertListTeasToTeaResponses.sort(Comparator.comparing(TeaResponse::getCreateDate).reversed());
+			return sendInvoicesToDownloadAsPdfFormat(convertListTeasToTeaResponses);
+		}
+
 		if (testRequest.getStartDate() != null && testRequest.getEndDate() != null) {
 			if (testRequest.getStartDate().equals("") && testRequest.getEndDate().equals("")
 					&& testRequest.getVendorId() != null) {
