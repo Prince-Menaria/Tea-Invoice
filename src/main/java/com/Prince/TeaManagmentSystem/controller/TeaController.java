@@ -45,7 +45,7 @@ public class TeaController {
 		return ResponseEntity.ok(teaService.sendToEmailFileForDate(testRequest.getEmail(), testRequest.getStartDate(),
 				testRequest.getEndDate(), testRequest.getVendorId()));
 	}
-
+	
 	@PostMapping("/downloadPdf")
 	public ResponseEntity<byte[]> downloadPDFOfListTeas(@ModelAttribute TestRequest testRequest)
 			throws DocumentException, IOException {
@@ -58,6 +58,19 @@ public class TeaController {
 		return ResponseEntity.ok().headers(headers).body(pdfContent);
 
 	}
+
+//	@PostMapping("/downloadPdf")
+//	public ResponseEntity<byte[]> downloadPDFOfListTeas(@ModelAttribute TestRequest testRequest)
+//			throws DocumentException, IOException {
+//
+//		byte[] pdfContent = teaService.downloadToPdfByFilters(testRequest);
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_PDF);
+//		headers.setContentDispositionFormData("attachment", "data.pdf");
+//
+//		return ResponseEntity.ok().headers(headers).body(pdfContent);
+//
+//	}
 
 	@DeleteMapping("/removeTeas")
 	public void deleteTeas() {

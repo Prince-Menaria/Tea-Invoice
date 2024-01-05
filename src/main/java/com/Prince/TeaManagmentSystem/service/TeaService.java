@@ -228,9 +228,9 @@ public class TeaService {
 		});
 
 		document.add(table);
-		document.add(new Paragraph("Grand Total : " + grandTotal + " INR"));
-		document.add(new Paragraph("Grand Total Quantity : " + grandTotalDaysQty));
 		document.add(new Paragraph("Fixed Price : " + fixed_price + " INR"));
+		document.add(new Paragraph("Grand Total Quantity : " + grandTotalDaysQty));
+		document.add(new Paragraph("Grand Total : " + grandTotal + " INR"));
 
 		document.close();
 
@@ -298,9 +298,9 @@ public class TeaService {
 		});
 
 		document.add(table);
-		document.add(new Paragraph("Grand Total : " + grandTotal + " INR"));
-		document.add(new Paragraph("Grand Total Quantity : " + grandTotalDaysQty));
 		document.add(new Paragraph("Fixed Price : " + fixed_price + " INR"));
+		document.add(new Paragraph("Grand Total Quantity : " + grandTotalDaysQty));
+		document.add(new Paragraph("Grand Total : " + grandTotal + " INR"));
 
 		document.close();
 
@@ -334,6 +334,20 @@ public class TeaService {
 	public BaseResponse sendToEmailFileForDate(String email, String startDate, String endDate, Long vendorId)
 			throws DocumentException, IOException {
 		BaseResponse response = new BaseResponse();
+
+		if (vendorId == null && email != null && startDate.equals("") && endDate.equals("")) {
+
+			List<TeaResponse> convertListTeasToTeaResponses = new ArrayList<>();
+
+			List<Tea> allTeasRes = getAllTeas();
+
+			convertListTeasToTeaResponses = convertTeaToTeaResponseByDate(allTeasRes);
+			convertListTeasToTeaResponses.sort(Comparator.comparing(TeaResponse::getCreateDate).reversed());
+			sendInvoicesToEmailAsPdfFormat(convertListTeasToTeaResponses, email);
+
+			response.setMsg("Email send with attached list of Teas data !!");
+			return response;
+		}
 
 		if (startDate.equals("") && endDate.equals("")) {
 			startDate = null;

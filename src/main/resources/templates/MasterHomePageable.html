@@ -264,9 +264,9 @@
 
 	<script src=" https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-	<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-	<!-- <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.css" rel="stylesheet">-->
+	<link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.css" rel="stylesheet">
 
 	<script>
 
@@ -376,7 +376,6 @@
 		});
 
 
-		/*
 		$('.download').submit(function (event) {
 			event.preventDefault(); // Prevent the default form submission
 
@@ -385,21 +384,45 @@
 				type: "POST",
 				url: "/downloadPdf", // Endpoint to handle form submission
 				data: $(this).serialize(), // Serialize the form data
-				success: function (response) {
+				xhrFields: {
+					responseType: 'blob' // Set the response type to blob for handling binary data
+				},
+				success: function (response, status, xhr) {
 					// Handle success response
-					//	console.log("Success:", response);
-					//	$('.toast-body').text('Export successfull !!');
-					//	$('.toast').toast('show');
-					document.getElementById('exportLoader').hidden = true;
-					document.getElementById('sendExportPdf').hidden = false;
+					const contentType = xhr.getResponseHeader('Content-Type');
+					if (contentType === 'application/pdf') {
+						const blob = new Blob([response], {type: 'application/pdf'});
+						const url = window.URL.createObjectURL(blob);
+						const a = document.createElement('a');
+						a.href = url;
+						a.download = `${Date.now()}`;
+						document.body.appendChild(a);
+						a.click();
+						document.body.removeChild(a);
+						$('.toast-body').text('Export successful!');
+						$('.toast').toast('show');
+						console.log("hdgajshgjhsa");
+						document.getElementById('exportLoader').hidden = true;
+						document.getElementById('sendExportPdf').hidden = false;
+
+
+					} else {
+						console.log('Unexpected response. Not a PDF.');
+						$('.toast-body').text('Export failed!');
+						$('.toast').toast('show');
+					}
 				},
 				error: function (xhr, status, error) {
 					// Handle error response
 					console.log("Error:", error);
+					$('.toast-body').text('Export failed!');
+					$('.toast').toast('show');
 					// You can display an error message or handle the error appropriately
 				}
 			});
-		});*/
+		});
+
+
 
 		<!-------------------------------------------------------------------------------->
 		function setMinStartDate() {
